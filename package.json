@@ -1,0 +1,32 @@
+{
+  "name": "@sway11466/holiday-jp-npm",
+  "version": "0.0.1",
+  "description": "Library to judge Japanese national holidays in nodejs.",
+  "main": "/dist/src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sway11466/holiday-jp-npm.git"
+  },
+  "keywords": [
+    "japanese",
+    "jp",
+    "holiday"
+  ],
+  "author": "sway11466",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sway11466/holiday-jp-npm/issues"
+  },
+  "homepage": "https://github.com/sway11466/holiday-jp-npm#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
