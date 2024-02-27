@@ -4,7 +4,7 @@
   "description": "Library to judge Japanese national holidays in nodejs.",
   "main": "/dist/src/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest"
   },
   "repository": {
