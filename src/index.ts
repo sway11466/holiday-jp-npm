@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { Holiday } from './Holiday';
 import { HolidayCondition } from './HolidayCondition';
 
@@ -8,7 +9,8 @@ import { HolidayCondition } from './HolidayCondition';
  * @see https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html
  * @see https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
  */
-const rs = fs.readFileSync('src/syukujitsu.csv');
+const csvPath = path.join(path.dirname(__filename), 'syukujitsu.csv');
+const rs = fs.readFileSync(csvPath);
 const line = rs.toString().split('\r\n');
 line.shift(); // ヘッダーを取り除く
 const holiday: Holiday[] = line.map((value) => {
