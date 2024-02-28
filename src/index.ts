@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Holiday } from './Holiday';
 import { HolidayCondition } from './HolidayCondition';
+import { HolidayStore } from './HolidayStore';
 
 /**
  * 内閣府公開の休日のデータを読み込む。
@@ -9,20 +10,27 @@ import { HolidayCondition } from './HolidayCondition';
  * @see https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html
  * @see https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
  */
-const csvPath = path.join(path.dirname(__filename), 'syukujitsu.csv');
-const rs = fs.readFileSync(csvPath);
-const line = rs.toString().split('\r\n');
-line.shift(); // ヘッダーを取り除く
-const holiday: Holiday[] = line.map((value) => {
-    const [date, name] = value.split(',');
-    const [year, month, day] = date.split('/');
-    return {
-        year: Number(year),
-        month: Number(month),
-        day: Number(day),
-        name: name,
-    }; 
-});
+const store: HolidayStore = (() => {
+    const store: HolidayStore = {};
+    const csvPath = path.join(path.dirname(__filename), 'syukujitsu.csv');
+    const rs = fs.readFileSync(csvPath);
+    const line = rs.toString().split('\r\n');
+    line.shift(); // ヘッダーを取り除く
+    line.forEach((value) => {
+        const [date, name] = value.split(',');
+        const [year, month, day] = date.split('/');
+        if (store[year] === undefined) {
+            store[year] = [];
+        }
+        store[year].push({
+            year: Number(year),
+            month: Number(month),
+            day: Number(day),
+            name: name,
+        }); 
+    });
+    return store;
+})();
 
 /**
  * 祝日を扱う機能を返却する。
@@ -35,7 +43,7 @@ const useHoliday = () => {
      * すべての祝日のデータを返す。
      */
     const all = () => {
-        return holiday;
+        return Object.values(store).flat();
     }
 
     /**
@@ -48,11 +56,11 @@ const useHoliday = () => {
      */
     const get = (cond?: HolidayCondition) => {
         if (cond === null || cond === undefined) {
-            return holiday;
+            return all();
         }
+        const holiday = (cond.year) ? store[cond.year] : all();
         return holiday.filter((value) => {
-            return (cond.year === undefined || value.year === cond.year) &&
-                (cond.month === undefined || value.month === cond.month) &&
+            return (cond.month === undefined || value.month === cond.month) &&
                 (cond.day === undefined || value.day === cond.day) &&
                 (cond.name === undefined || value.name === cond.name);
         });
@@ -77,16 +85,13 @@ const useHoliday = () => {
         const year = cond.getFullYear();
         const month = cond.getMonth() + 1;
         const day = cond.getDate();
-        return holiday.some((value) => {
-            return value.year === year && value.month === month && value.day === day;
-        });
+        return isHolidayByHolidayConditon({ year, month, day});
     }
     const isHolidayByHolidayConditon = (cond: HolidayCondition) => {
         if (cond.year === undefined || cond.month === undefined || cond.day === undefined) {
             throw new Error('[@sway11466/holyday-jp error] year, month, day is required');
         }
-        const holidays = get(cond);
-        return holidays.length > 0;
+        return get(cond).length > 0;
     }
 
     return { all, get, isHoliday };
