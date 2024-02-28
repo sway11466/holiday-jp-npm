@@ -1,0 +1,15 @@
+import { Holiday, useHoliday } from '../src/index';
+
+test('[min] basic call', () => {
+    const holidayjp = useHoliday();
+    holidayjp.min();
+    expect(true);
+});
+
+test('[min] valid data', () => {
+    const holidayjp = useHoliday();
+    const holiday = holidayjp.min();
+    expect(holiday.year).toEqual(1955);
+    expect(holiday.month).toEqual(1);
+    expect(holiday.day).toEqual(1);
+});

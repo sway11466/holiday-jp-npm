@@ -31,9 +31,16 @@ test('[isHoliday] not holiday call by HolidayCondition', () => {
     expect(holiday).toBe(false);
 });
 
-test('[isHoliday] throw error by HolidayCondition', () => {
+test('[isHoliday] throw not valid date error by HolidayCondition', () => {
     const holidayjp = useHoliday();
     expect(() => {
          holidayjp.isHoliday({ year: 2021, month: 5 });
+    }).toThrow();
+});
+
+test('[isHoliday] throw not support day error by HolidayCondition', () => {
+    const holidayjp = useHoliday();
+    expect(() => {
+         holidayjp.isHoliday({ year: new Date().getFullYear()+2, month: 1, day: 1 }); // 2年後の1/1
     }).toThrow();
 });
