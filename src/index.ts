@@ -35,14 +35,14 @@ const store: HolidayStore = (() => {
  * 
  * @returns 
  */
-const useHoliday = () => {
+function useHolidayJP() {
 
     /**
      * すべての祝日のデータを返す。
      */
     const all = () => {
         return Object.values(store).flat();
-    }
+    };
 
     /**
      * 最も過去の祝日のデータを返す。
@@ -50,7 +50,7 @@ const useHoliday = () => {
     const min = () => {
         const years = Object.keys(store).map(value => Number(value));
         return store[Math.min(...years)][0];
-    }
+    };
 
     /**
      * 最も未来の祝日のデータを返す。
@@ -59,7 +59,7 @@ const useHoliday = () => {
         const years = Object.keys(store).map(value => Number(value));
         const holiday = store[Math.max(...years)];
         return holiday[holiday.length - 1];
-    }
+    };
 
     /**
      * 条件に合致する祝日のデータを返す。
@@ -80,7 +80,7 @@ const useHoliday = () => {
                 (cond.day === undefined || value.day === cond.day) &&
                 (cond.name === undefined || value.name === cond.name);
         });
-    }
+    };
 
     /**
      * 指定した日付が祝日の場合にtrueを返す。
@@ -94,13 +94,13 @@ const useHoliday = () => {
         } else {
             return isHolidayByHolidayConditon(cond);
         }
-    }
+    };
     const isHolidayByDate = (cond: Date) => {
         const year = cond.getFullYear();
         const month = cond.getMonth() + 1;
         const day = cond.getDate();
-        return isHolidayByHolidayConditon({ year, month, day});
-    }
+        return isHolidayByHolidayConditon({ year, month, day });
+    };
     const isHolidayByHolidayConditon = (cond: HolidayCondition) => {
         if (!isSupportDateByHolidayConditon(cond)) {
             throw new Error('[@sway11466/holyday-jp error] not supported date.');
@@ -109,7 +109,7 @@ const useHoliday = () => {
             throw new Error('[@sway11466/holyday-jp error] year, month, day is required');
         }
         return get(cond).length > 0;
-    }
+    };
 
     /**
      * 指定した日付がサポート対象の年の場合にtrueを返す。
@@ -120,17 +120,18 @@ const useHoliday = () => {
         } else {
             return isSupportDateByHolidayConditon(cond);
         }
-    }
+    };
     const isSupportDateByDate = (cond: Date) => {
         const year = cond.getFullYear();
         return isSupportDateByHolidayConditon({ year });
-    }
+    };
     const isSupportDateByHolidayConditon = (cond: HolidayCondition) => {
         if (!cond.year) { return true; }
         return min().year <= cond.year && cond.year <= max().year;
-    }
+    };
 
     return { all, min, max, get, isHoliday, isSupportDate };
 }
 
-export { Holiday, useHoliday };
+export { useHolidayJP };
+export { Holiday, HolidayCondition, HolidayStore };

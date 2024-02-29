@@ -1,14 +1,14 @@
-import { Holiday, useHoliday } from '../src/index';
+import { Holiday, useHolidayJP } from '../src/index';
 
 test('[max] basic call', () => {
-    const holidayjp = useHoliday();
+    const holidayjp = useHolidayJP();
     holidayjp.max();
     expect(true);
 });
 
 test('[max] valid data', () => {
     const nowYear = new Date().getFullYear();
-    const holidayjp = useHoliday();
+    const holidayjp = useHolidayJP();
     const holiday = holidayjp.max();
     expect(holiday.year).toEqual(nowYear + 1);
 });
