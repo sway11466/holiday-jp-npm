@@ -1,4 +1,4 @@
-import { HolidayCondition } from '../src/HolidayCondition';
+import { JPHolidayCondition } from '../src/JPHolidayCondition';
 import { useHolidayJP } from '../src/index';
 
 test('[get] basic call', () => {
@@ -11,31 +11,31 @@ test('[get] basic call', () => {
 
 test('[get] year param', () => {
     const holidayjp = useHolidayJP();
-    const holidays = holidayjp.get({ year: 2021 } as HolidayCondition);
+    const holidays = holidayjp.get({ year: 2021 } as JPHolidayCondition);
     expect(holidays.length).toEqual(17);
 });
 
 test('[get] month param', () => {
     const holidayjp = useHolidayJP();
-    const holidays = holidayjp.get({ year: 2021, month: 5 } as HolidayCondition);
+    const holidays = holidayjp.get({ year: 2021, month: 5 } as JPHolidayCondition);
     expect(holidays.length).toEqual(3);
 });
 
 test('[get] day param', () => {
     const holidayjp = useHolidayJP();
-    const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 } as HolidayCondition);
+    const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 } as JPHolidayCondition);
     expect(holidays.length).toEqual(1);
 });
 
 test('[get] name param', () => {
     const holidayjp = useHolidayJP();
-    const holidays = holidayjp.get({ name: '体育の日' } as HolidayCondition);
+    const holidays = holidayjp.get({ name: '体育の日' } as JPHolidayCondition);
     expect(holidays.length).toEqual(53);
 });
 
 test('[get] year and name param', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.get({ year: 2021, name: 'スポーツの日' } as HolidayCondition);
+    const holiday = holidayjp.get({ year: 2021, name: 'スポーツの日' } as JPHolidayCondition);
     expect(holiday.length).toEqual(1);
     expect(holiday[0].year).toEqual(2021);
     expect(holiday[0].month).toEqual(7);
@@ -44,7 +44,7 @@ test('[get] year and name param', () => {
 
 test('[get] no result param', () => {
     const holidayjp = useHolidayJP();
-    const holidays = holidayjp.get({ year: 2021, month: 5, day: 10 } as HolidayCondition);
+    const holidays = holidayjp.get({ year: 2021, month: 5, day: 10 } as JPHolidayCondition);
     expect(holidays.length).toEqual(0);
 });
 

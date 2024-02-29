@@ -1,8 +1,16 @@
 import fs from 'fs';
 import path from 'path';
-import { Holiday } from './Holiday';
-import { HolidayCondition } from './HolidayCondition';
+import { JPHoliday } from './JPHoliday';
+import { JPHolidayCondition } from './JPHolidayCondition';
 import { HolidayStore } from './HolidayStore';
+
+/**
+ * 引数で指定したDateオブジェクトの日本タイムゾーンでの日付を返す。時刻は00:00:00となる。
+ */
+const getJPTimeZoneDateFromDate = (date: Date) => {
+    const JPDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60 * 1000) + (9 * 60 * 60 * 1000));
+    return new Date(JPDate.getFullYear(), JPDate.getMonth(), JPDate.getDate());
+}
 
 /**
  * 内閣府公開の休日のデータを読み込む。
@@ -25,6 +33,7 @@ const store: HolidayStore = (() => {
             month: Number(month),
             day: Number(day),
             name: name,
+            localDate: getJPTimeZoneDateFromDate(new Date(Number(year), Number(month) - 1, Number(day))),
         }); 
     });
     return store;
@@ -62,12 +71,24 @@ function useHolidayJP() {
     };
 
     /**
+     * 引数で指定したdateオブジェクトから JPHolidayCondition を生成して返却する。
+     */
+    const createCond = (date: Date): JPHolidayCondition => {
+        const jpDate = getJPTimeZoneDateFromDate(date);
+        return {
+            year: jpDate.getFullYear(),
+            month: jpDate.getMonth() + 1,
+            day: jpDate.getDate()
+        };
+    }
+
+    /**
      * 条件に合致する祝日のデータを返す。
      * 条件に合致する祝日がない場合には空の配列を返す。
      * サポート外の年の条件を指定した場合にはエラーをthrowする。
      * @todo date型も受け取れるようにする
      */
-    const get = (cond?: HolidayCondition) => {
+    const get = (cond?: JPHolidayCondition) => {
         if (cond === null || cond === undefined) {
             return all();
         }
@@ -88,21 +109,11 @@ function useHolidayJP() {
      * HolidayConditionを指定した場合にはyear/month/dayの指定が必須となる。指定が不足する場合はErrorをthrowする。nameは無視される。
      * サポート外の年の条件を指定した場合にはエラーをthrowする。
      */
-    const isHoliday = (cond: Date | HolidayCondition) => {
-        if (cond instanceof Date) {
-            return isHolidayByDate(cond);
-        } else {
-            return isHolidayByHolidayConditon(cond);
-        }
+    const isHoliday = (cond: Date | JPHolidayCondition) => {
+        return isHolidayImpl((cond instanceof Date) ? createCond(cond) : cond);
     };
-    const isHolidayByDate = (cond: Date) => {
-        const year = cond.getFullYear();
-        const month = cond.getMonth() + 1;
-        const day = cond.getDate();
-        return isHolidayByHolidayConditon({ year, month, day });
-    };
-    const isHolidayByHolidayConditon = (cond: HolidayCondition) => {
-        if (!isSupportDateByHolidayConditon(cond)) {
+    const isHolidayImpl = (cond: JPHolidayCondition) => {
+        if (!isSupportDateImpl(cond)) {
             throw new Error('[@sway11466/holyday-jp error] not supported date.');
         }
         if (cond.year === undefined || cond.month === undefined || cond.day === undefined) {
@@ -114,24 +125,16 @@ function useHolidayJP() {
     /**
      * 指定した日付がサポート対象の年の場合にtrueを返す。
      */
-    const isSupportDate = (cond: Date | HolidayCondition) => {
-        if (cond instanceof Date) {
-            return isSupportDateByDate(cond);
-        } else {
-            return isSupportDateByHolidayConditon(cond);
-        }
+    const isSupportDate = (cond: Date | JPHolidayCondition) => {
+        return isSupportDateImpl((cond instanceof Date) ? createCond(cond) : cond);
     };
-    const isSupportDateByDate = (cond: Date) => {
-        const year = cond.getFullYear();
-        return isSupportDateByHolidayConditon({ year });
-    };
-    const isSupportDateByHolidayConditon = (cond: HolidayCondition) => {
+    const isSupportDateImpl = (cond: JPHolidayCondition) => {
         if (!cond.year) { return true; }
         return min().year <= cond.year && cond.year <= max().year;
     };
 
-    return { all, min, max, get, isHoliday, isSupportDate };
+    return { all, min, max, createCond, get, isHoliday, isSupportDate };
 }
 
 export { useHolidayJP };
-export { Holiday, HolidayCondition, HolidayStore };
+export { JPHoliday as Holiday, JPHolidayCondition as HolidayCondition, HolidayStore };

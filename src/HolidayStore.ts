@@ -1,9 +1,9 @@
-import { Holiday } from "./Holiday";
+import { JPHoliday } from "./JPHoliday";
 
 /**
  * 祝日の型情報。
  * キーは年。値はキーに対応したHoliday型の値の配列。 
  */
 export type HolidayStore = {
-    [year: number]: Holiday[];
+    [year: number]: JPHoliday[];
 }

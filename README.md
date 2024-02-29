@@ -1,6 +1,5 @@
 # holiday-jp-npm
-内閣府ホームページの「国民の祝日」について[^1]に記載の祝日を判定するライブラリです。
-[^1] https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html
+内閣府ホームページの[「国民の祝日」について](https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html)に記載の祝日を判定するライブラリです。
 
 ## インストール
 ```
@@ -28,10 +27,13 @@ npm install @sway11466/holiday-jp-npm
    console.log(holidays[0].date); // 2021/7/23のDateオブジェクト（日本オリンピックによる特別対応日）
    ```
 
-## トピックス
-- 1955年～2025年しか対応していません
-  - 内閣府ホームページで公開しているCSVをデータ元としているためです
+## 説明
+- 1955年～2025年に対応しています
+  - 内閣府ホームページ公開のデータが2025年までのデータを扱っています
   - 対応外の日付を指定するとエラーを起こします
+- このライブラリは実行環境のタイムゾーンを考慮します
+  - isHolidayやgetにDateオブジェクトを指定すると実行環境のタイムゾーンを考慮して判定を行います
+- (Feature!) より詳細な情報は[docフォルダ](https://github.com/sway11466/holiday-jp-npm/tree/main/doc)内のドキュメントを参照してください
 
 ## メンテナー向け
 - install
