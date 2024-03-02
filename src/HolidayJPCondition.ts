@@ -7,7 +7,7 @@
  *     - 日本語での祝日名
  *     - 完全一致のみ
  */
-export type JPHolidayCondition = {
+export type HolidayJPCondition = {
     year?: number;
     month?: number;
     day?: number;

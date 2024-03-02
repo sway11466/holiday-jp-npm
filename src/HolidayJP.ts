@@ -8,9 +8,9 @@
  *     - スクリプト実行環境のタイムゾーンでの日付
  *     - 時刻は00:00:00となる
  *     - タイムゾーンがJST(Asia/Tokyo)の環境であればyear/month/dayと同じ値となる
- *     - タイムゾーンがUTCの環境であればyear/month/dayの前日の23:00:00となる
+ *     - タイムゾーンがUTCの環境であればyear/month/dayの前日となる
  */
-export type JPHoliday = {
+export type HolidayJP = {
     year: number;
     month: number;
     day: number;

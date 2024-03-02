@@ -18,18 +18,18 @@ npm install @sway11466/holiday-jp-npm
    const holidays = holidayjp.get({ year: 2021, month: 5 });
    console.log(holidays.length);  // 3
    console.log(holidays[0].name); // 憲法記念日
-   console.log(holidays[0].date); // 2021/5/3のDateオブジェクト
+   console.log(holidays[0].localDate); // 2021/5/3のDateオブジェクト
    ```
 - 指定した条件に当てはまる祝日を取得する（例２）
    ```
    const holidays = holidayjp.get({ year: 2021, name: "スポーツの日" });
    console.log(holidays.length);  // 1
-   console.log(holidays[0].date); // 2021/7/23のDateオブジェクト（日本オリンピックによる特別対応日）
+   console.log(holidays[0].localDate); // 2021/7/23のDateオブジェクト（日本オリンピックによる特別対応日）
    ```
 
 ## 説明
 - 1955年～2025年に対応しています
-  - 内閣府ホームページ公開のデータが2025年までのデータを扱っています
+  - 内閣府ホームページで公開しているデータが2025年までのためです
   - 対応外の日付を指定するとエラーを起こします
 - このライブラリは実行環境のタイムゾーンを考慮します
   - isHolidayやgetにDateオブジェクトを指定すると実行環境のタイムゾーンを考慮して判定を行います

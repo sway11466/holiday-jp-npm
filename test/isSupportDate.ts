@@ -1,5 +1,4 @@
-import { JPHolidayCondition } from '../src/JPHolidayCondition';
-import { Holiday, useHolidayJP } from '../src/index';
+import { useHolidayJP } from '../src/index';
 
 test('[isHoliday] basic call', () => {
     const holidayjp = useHolidayJP();

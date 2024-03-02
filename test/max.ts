@@ -1,4 +1,4 @@
-import { Holiday, useHolidayJP } from '../src/index';
+import { useHolidayJP } from '../src/index';
 
 test('[max] basic call', () => {
     const holidayjp = useHolidayJP();

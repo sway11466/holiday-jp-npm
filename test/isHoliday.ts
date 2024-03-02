@@ -1,4 +1,3 @@
-import { JPHolidayCondition } from '../src/JPHolidayCondition';
 import { useHolidayJP } from '../src/index';
 
 test('[isHoliday] basic call', () => {

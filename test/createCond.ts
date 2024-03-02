@@ -22,8 +22,7 @@ test('[createCond] call in utc', () => {
     const holidayjp = useHolidayJP();
     const date = new Date(2023, 11, 31, 15, 0 ,0 ,0); // JSTでは2024/1/1
     const cond = holidayjp.createCond(date);
-    const jpDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-    expect(cond.year).toBe(jpDate.getFullYear());
-    expect(cond.month).toBe(jpDate.getMonth() + 1);
-    expect(cond.day).toBe(jpDate.getDate());
+    expect(cond.year).toBe(2024);
+    expect(cond.month).toBe(1);
+    expect(cond.day).toBe(1);
 });
