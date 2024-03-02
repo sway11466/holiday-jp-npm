@@ -33,7 +33,7 @@ npm install @sway11466/holiday-jp-npm
   - 対応外の日付を指定するとエラーを起こします
 - このライブラリは実行環境のタイムゾーンを考慮します
   - isHolidayやgetにDateオブジェクトを指定すると実行環境のタイムゾーンを考慮して判定を行います
-- (Feature!) より詳細な情報は[docフォルダ](https://github.com/sway11466/holiday-jp-npm/tree/main/doc)内のドキュメントを参照してください
+- より詳細な情報は[docフォルダ](https://github.com/sway11466/holiday-jp-npm/tree/main/doc)内のドキュメントを参照してください
 
 ## メンテナー向け
 - install

@@ -3,6 +3,16 @@ import path from 'path';
 import { HolidayJP } from './HolidayJP';
 import { HolidayJPCondition } from './HolidayJPCondition';
 import { HolidayJPStore } from './HolidayJPStore';
+import { HolidayJPSetting } from './HolidayJPSetting';
+
+/**
+ * デフォルト設定を生成する。
+ */
+const createDefaultStoreSetting = (): HolidayJPSetting => {
+    return {
+        timezoneEffect: true
+    };
+}
 
 /**
  * 引数で指定したDateオブジェクトのタイムゾーンJSTでの日付を返す。時刻は00:00:00となる。
@@ -27,16 +37,16 @@ const convertLocalTimeZoneDate = (date: HolidayJP) => {
  * @see https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
  */
 const store: HolidayJPStore = (() => {
-    const store: HolidayJPStore = {};
+    const store: HolidayJPStore = { holiday: {}, setting: createDefaultStoreSetting() };
     const csvPath = path.join(path.dirname(__filename), 'syukujitsu.csv');
     fs.readFileSync(csvPath).toString().split('\r\n').forEach((value) => {
         if (!value.match(/\d+\/\d+\/\d+/)) { return; } // ヘッダーと空行を除く
         const [date, name] = value.split(',');
         const [year, month, day] = date.split('/').map(value => Number(value));
-        if (store[year] === undefined) {
-            store[year] = [];
+        if (store.holiday[year] === undefined) {
+            store.holiday[year] = [];
         }
-        store[year].push({
+        store.holiday[year].push({
             year,
             month,
             day,
@@ -52,48 +62,56 @@ const store: HolidayJPStore = (() => {
  * 
  * @returns 
  */
-const useHolidayJP = () => {
+const useHolidayJP = (initSetting?: HolidayJPSetting) => {
 
     /**
      * 設定を反映する。
      */
-    (() => {
-        // feature not implemented
-    })();
+    ((setting) => {
+        if (setting === undefined) { return; }
+        Object.assign(store.setting, setting);
+    })(initSetting);
 
     /**
      * すべての祝日のデータを返す。
      */
-    const all = () => {
-        return Object.values(store).flat();
+    const all = (): HolidayJP[] => {
+        return Object.values(store.holiday).flat();
     };
 
     /**
      * 最も過去の祝日のデータを返す。
      */
-    const min = () => {
-        const years = Object.keys(store).map(value => Number(value));
-        return store[Math.min(...years)][0];
+    const min = (): HolidayJP => {
+        const years = Object.keys(store.holiday).map(value => Number(value));
+        return store.holiday[Math.min(...years)][0];
     };
 
     /**
      * 最も未来の祝日のデータを返す。
      */
-    const max = () => {
-        const years = Object.keys(store).map(value => Number(value));
-        const holiday = store[Math.max(...years)];
+    const max = (): HolidayJP => {
+        const years = Object.keys(store.holiday).map(value => Number(value));
+        const holiday = store.holiday[Math.max(...years)];
         return holiday[holiday.length - 1];
+    };
+
+    /**
+     * ストア設定を返却する。
+     */
+    const setting = (): HolidayJPSetting => {
+        return structuredClone(store.setting);
     };
 
     /**
      * 引数で指定したdateオブジェクトから JPHolidayCondition を生成して返却する。
      */
     const createCond = (date: Date): HolidayJPCondition => {
-        const jpDate = convertJSPTimeZoneDate(date);
+        const condDate = store.setting.timezoneEffect ? convertJSPTimeZoneDate(date) : date;
         return {
-            year: jpDate.getFullYear(),
-            month: jpDate.getMonth() + 1,
-            day: jpDate.getDate()
+            year: condDate.getFullYear(),
+            month: condDate.getMonth() + 1,
+            day: condDate.getDate()
         };
     }
 
@@ -110,12 +128,28 @@ const useHolidayJP = () => {
         if (!isSupportDate(cond)) {
             throw new Error('[@sway11466/holyday-jp error] not supported date.');
         }
-        const holiday = (cond.year) ? store[cond.year] : all();
+        const holiday = (cond.year) ? store.holiday[cond.year] : all();
         return holiday.filter((value) => {
             return (cond.month === undefined || value.month === cond.month) &&
                 (cond.day === undefined || value.day === cond.day) &&
                 (cond.name === undefined || value.name === cond.name);
         });
+    };
+
+    /**
+     * 指定した日付が存在する日付の場合にtrueを返す。
+     */
+    const isValidDate = (cond: Date | HolidayJPCondition) => {
+        return isValidDateImpl((cond instanceof Date) ? createCond(cond) : cond);
+    };
+    const isValidDateImpl = (cond: HolidayJPCondition) => {
+        if (cond.year === undefined || cond.month === undefined || cond.day === undefined) {
+            return false;
+        }
+        const year = cond.year.toString();
+        const month = cond.month?.toString().padStart(2, '0');
+        const day = cond.day?.toString().padStart(2, '0');
+        return !isNaN(new Date(`${year}-${month}-${day}`).getDate());
     };
 
     /**
@@ -128,11 +162,11 @@ const useHolidayJP = () => {
         return isHolidayImpl((cond instanceof Date) ? createCond(cond) : cond);
     };
     const isHolidayImpl = (cond: HolidayJPCondition) => {
-        if (!isSupportDateImpl(cond)) {
-            throw new Error('[@sway11466/holyday-jp error] not supported date.');
+        if (!isValidDateImpl(cond)) {
+            throw new Error(`[@sway11466/holyday-jp error] invalid date. cond=${cond}`);
         }
-        if (cond.year === undefined || cond.month === undefined || cond.day === undefined) {
-            throw new Error('[@sway11466/holyday-jp error] year, month, day is required');
+        if (!isSupportDateImpl(cond)) {
+            throw new Error(`@sway11466/holyday-jp error] not supported date. cond=${cond}`);
         }
         return get(cond).length > 0;
     };
@@ -148,7 +182,7 @@ const useHolidayJP = () => {
         return min().year <= cond.year && cond.year <= max().year;
     };
 
-    return { all, min, max, createCond, get, isHoliday, isSupportDate };
+    return { all, min, max, setting, createCond, get, isValidDate, isHoliday, isSupportDate };
 }
 
 export { useHolidayJP };

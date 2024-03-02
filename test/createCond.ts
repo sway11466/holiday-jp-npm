@@ -7,22 +7,70 @@ test('[createCond] basic call', () => {
     expect(true);
 });
 
-test('[createCond] call in jst', () => {
+// --------------------------------
+//  timezone test section
+// --------------------------------
+
+test('[createCond] timezone is JST', () => {
     timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
     const holidayjp = useHolidayJP();
-    const date = new Date();
+    const date = new Date(2021, 1-1, 11, 15, 0, 0); // 2021/1/11 15:00:00 JST
     const cond = holidayjp.createCond(date);
-    expect(cond.year).toBe(date.getFullYear());
-    expect(cond.month).toBe(date.getMonth() + 1);
-    expect(cond.day).toBe(date.getDate());
+    expect(cond.year).toBe(2021);
+    expect(cond.month).toBe(1);
+    expect(cond.day).toBe(11);
 });
 
-test('[createCond] call in utc', () => {
+test('[createCond] timezone is UTC', () => {
     timezoneMock.register('UTC');
     const holidayjp = useHolidayJP();
-    const date = new Date(2023, 11, 31, 15, 0 ,0 ,0); // JSTでは2024/1/1
+    const date = new Date(2021, 1-1, 11, 15, 0, 0); // 2021/1/11 15:00:00 UTC => 2021/1/12 00:00:00 JST
     const cond = holidayjp.createCond(date);
-    expect(cond.year).toBe(2024);
+    expect(cond.year).toBe(2021);
     expect(cond.month).toBe(1);
-    expect(cond.day).toBe(1);
+    expect(cond.day).toBe(12);
+});
+
+// --------------------------------
+//  setting.timezoneEffect test section
+// --------------------------------
+
+test('[createCond] setting.timezoneEffect true on JST', () => {
+    timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
+    const holidayjp = useHolidayJP({ timezoneEffect: true});
+    const date = new Date(2021, 1-1, 11, 15, 0, 0); // 2021/1/11 15:00:00 JST
+    const cond = holidayjp.createCond(date);
+    expect(cond.year).toBe(2021);
+    expect(cond.month).toBe(1);
+    expect(cond.day).toBe(11);
+});
+
+test('[createCond] setting.timezoneEffect false on JST', () => {
+    timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
+    const holidayjp = useHolidayJP({ timezoneEffect: false});
+    const date = new Date(2021, 1-1, 11, 15, 0, 0); // 2021/1/11 15:00:00 JST
+    const cond = holidayjp.createCond(date);
+    expect(cond.year).toBe(2021);
+    expect(cond.month).toBe(1);
+    expect(cond.day).toBe(11);
+});
+
+test('[createCond] setting.timezoneEffect true on UTC', () => {
+    timezoneMock.register('UTC');
+    const holidayjp = useHolidayJP({ timezoneEffect: true});
+    const date = new Date(2021, 1-1, 11, 15, 0, 0); // 2021/1/11 15:00:00 UTC => 2021/1/12 00:00:00 JST
+    const cond = holidayjp.createCond(date);
+    expect(cond.year).toBe(2021);
+    expect(cond.month).toBe(1);
+    expect(cond.day).toBe(12);
+});
+
+test('[createCond] setting.timezoneEffect false on UTC', () => {
+    timezoneMock.register('UTC');
+    const holidayjp = useHolidayJP({ timezoneEffect: false});
+    const date = new Date(2021, 1-1, 11, 15, 0, 0); // 2021/1/11 15:00:00 UTC => 2021/1/12 00:00:00 JST
+    const cond = holidayjp.createCond(date);
+    expect(cond.year).toBe(2021);
+    expect(cond.month).toBe(1);
+    expect(cond.day).toBe(11);
 });
