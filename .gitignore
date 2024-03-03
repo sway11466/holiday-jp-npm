@@ -123,3 +123,6 @@ web_modules/
 
 # build output
 dist/
+
+# memo document
+doc/memo
