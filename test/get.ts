@@ -85,7 +85,7 @@ test('[get] feature date by HolidayCondition', () => {
 // invalid test at Date
 
 // --------------------------------
-//  timezone test section
+//  timezone section
 // --------------------------------
 
 test('[get] timezone is JST', () => {
@@ -107,10 +107,10 @@ test('[get] timezone is UTC', () => {
 });
 
 // --------------------------------
-//  setting.timezoneEffect test section
+//  timezoneEffect section (false only because default is true)
 // --------------------------------
 
-test('[get] setting.timezoneEffect true on JST', () => {
+test('[get] timezoneEffect=true on JST', () => {
     timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
     const holidayjp = useHolidayJP({ timezoneEffect: true });
     const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
@@ -119,7 +119,7 @@ test('[get] setting.timezoneEffect true on JST', () => {
     expect(holidays[0].localDate.getDate()).toEqual(3);
 });
 
-test('[get] setting.timezoneEffect false on JST', () => {
+test('[get] timezoneEffect=false on JST', () => {
     timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
     const holidayjp = useHolidayJP({ timezoneEffect: false });
     const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
@@ -128,7 +128,7 @@ test('[get] setting.timezoneEffect false on JST', () => {
     expect(holidays[0].localDate.getDate()).toEqual(3);
 });
 
-test('[get] setting.timezoneEffect true on UTC', () => {
+test('[get] imezoneEffect=true on UTC', () => {
     timezoneMock.register('UTC');
     const holidayjp = useHolidayJP({ timezoneEffect: true });
     const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
@@ -137,7 +137,7 @@ test('[get] setting.timezoneEffect true on UTC', () => {
     expect(holidays[0].localDate.toISOString()).toEqual("2021-05-02T15:00:00.000Z");
 });
 
-test('[get] setting.timezoneEffect false on UTC', () => {
+test('[get] timezoneEffect=false on UTC', () => {
     timezoneMock.register('UTC');
     const holidayjp = useHolidayJP({ timezoneEffect: false });
     const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
@@ -145,3 +145,23 @@ test('[get] setting.timezoneEffect false on UTC', () => {
     expect(holidays[0].localDate.getMonth()).toEqual(5-1);
     expect(holidays[0].localDate.getDate()).toEqual(3);
 });
+
+// --------------------------------
+//  unsupportedDateBehavior section ('ignore' only because default is 'error')
+// --------------------------------
+
+test('[get] unsupportedDateBehavior=ignore older by HolidayCondition', () => {
+    const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
+    const cond = { year: 1954, month: 1, day: 1 };
+    const holiday = holidayjp.get(cond);
+    expect(holiday.length).toEqual(0);
+});
+
+test('[get]  unsupportedDateBehavior=ignore feature by HolidayCondition', () => {
+    const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
+    const cond = { year: new Date().getFullYear()+2, month: 1, day: 1 }; // 2年後の1/1
+    const holiday = holidayjp.get(cond);
+    expect(holiday.length).toEqual(0);
+});
+
+// invalid test at Date

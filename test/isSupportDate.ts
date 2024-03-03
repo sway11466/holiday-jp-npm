@@ -44,7 +44,8 @@ test('[isSupportDate] invalid day call by HolidayJPCondition', () => {
 
 test('[isSupportDate] older day call by Date', () => {
     const holidayjp = useHolidayJP();
-    const isSupportRet = holidayjp.isSupportDate(new Date(1954, 1-1, 1)); // 1954/1/1
+    const date = new Date("1954-01-01T00:00:00+09:00");
+    const isSupportRet = holidayjp.isSupportDate(date);
     expect(isSupportRet).toBe(false);
 });
 
@@ -60,7 +61,9 @@ test('[isSupportDate] older day call by HolidayJPCondition', () => {
 
 test('[isSupportDate] feature day call by Date', () => {
     const holidayjp = useHolidayJP();
-    const isSupportRet = holidayjp.isSupportDate(new Date(new Date().getFullYear()+2, 1, 1)); // 2年後の1/1
+    const testYear = new Date().getFullYear() + 2;
+    const date = new Date(`${testYear}-01-01T00:00:00+09:00`);
+    const isSupportRet = holidayjp.isSupportDate(date); // 2年後の1/1
     expect(isSupportRet).toBe(false);
 });
 

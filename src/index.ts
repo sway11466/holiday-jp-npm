@@ -3,14 +3,15 @@ import path from 'path';
 import { HolidayJP } from './HolidayJP';
 import { HolidayJPCondition } from './HolidayJPCondition';
 import { HolidayJPStore } from './HolidayJPStore';
-import { HolidayJPSetting } from './HolidayJPSetting';
+import { HolidayJPSetting, HolidayJPSettingCond } from './HolidayJPSetting';
 
 /**
- * デフォルト設定を生成する。
+ * デフォルトのライブラリ動作設定を生成する。
  */
 const createDefaultStoreSetting = (): HolidayJPSetting => {
     return {
-        timezoneEffect: true
+        timezoneEffect: true,
+        unsupportedDateBehavior: 'error',
     };
 }
 
@@ -57,7 +58,7 @@ const store: HolidayJPStore = (() => {
  * 
  * @returns 
  */
-const useHolidayJP = (initSetting?: HolidayJPSetting) => {
+const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
 
     /**
      * 設定を反映する。
@@ -167,6 +168,7 @@ const useHolidayJP = (initSetting?: HolidayJPSetting) => {
             return all();
         }
         if (!isSupportDate(cond)) {
+            if (store.setting.unsupportedDateBehavior === 'ignore') { return []; }
             throw new Error('[@sway11466/holyday-jp error] not supported date.');
         }
         const holiday = (cond.year) ? store.holiday[cond.year] : all();
@@ -188,6 +190,7 @@ const useHolidayJP = (initSetting?: HolidayJPSetting) => {
             throw new Error(`[@sway11466/holyday-jp error] invalid date. date=${date}`);
         }
         if (!isSupportDateImpl(date)) {
+            if (store.setting.unsupportedDateBehavior === 'ignore') { return false; }
             throw new Error(`@sway11466/holyday-jp error] not supported date. date=${date}`);
         }
         return get(date).length > 0;
@@ -203,7 +206,7 @@ const useHolidayJP = (initSetting?: HolidayJPSetting) => {
         if (!isValidDateImpl(date)) {
             throw new Error(`[@sway11466/holyday-jp error] invalid date. date=${date}`);
         }
-        if (!isSupportDateImpl(date)) {
+        if (!isSupportDateImpl(date) && (store.setting.unsupportedDateBehavior !== 'ignore')) {
             throw new Error(`@sway11466/holyday-jp error] not supported date. date=${date}`);
         }
         const jstDate = new Date(date.year as number, date.month as number- 1, date.day);

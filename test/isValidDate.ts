@@ -12,7 +12,8 @@ test('[isValidDate] basic call', () => {
 
 test('[isValidDate] valid by Date', () => {
     const holidayjp = useHolidayJP();
-    const valid = holidayjp.isValidDate(new Date(2021, 5-1, 3)); // 2021/5/3
+    const date = new Date("2021-05-03T00:00:00+09:00"); // 憲法記念日
+    const valid = holidayjp.isValidDate(date);
     expect(valid).toBe(true);
 });
 

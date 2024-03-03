@@ -13,25 +13,27 @@ test('[isHoliday] basic call', () => {
 
 test('[isHoliday] holiday call by Date', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isHoliday(new Date(2021, 5-1, 3)); // 2021/5/3
+    const date = new Date("2021-05-03T00:00:00+09:00"); // 憲法記念日
+    const holiday = holidayjp.isHoliday(date);
     expect(holiday).toBe(true);
 });
 
 test('[isHoliday] holiday call by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, day: 3 });
+    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, day: 3 }); // 憲法記念日
     expect(holiday).toBe(true);
 });
 
 test('[isHoliday] not holiday call by Date', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isHoliday(new Date(2021, 5-1, 20)); // 2021/5/20
+    const date = new Date("2021-05-20T00:00:00+09:00"); // 平日
+    const holiday = holidayjp.isHoliday(date);
     expect(holiday).toBe(false);
 });
 
 test('[isHoliday] not holiday call by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, day: 20 });
+    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, day: 20 }); // 平日
     expect(holiday).toBe(false);
 });
 
@@ -67,7 +69,7 @@ test('[isHoliday] loss field day by HolidayCondition', () => {
 test('[isHoliday] older date by Date', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = new Date(1954, 1, 1);
+        const date = new Date("1954-01-01T00:00:00+09:00");
         holidayjp.isHoliday(date);
     }).toThrow();
 });
@@ -83,7 +85,8 @@ test('[isHoliday] older date by HolidayCondition', () => {
 test('[isHoliday] feature date by Date', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = new Date(new Date().getFullYear() + 2,1, 1); // 2年後の1/1
+        const testYear = new Date().getFullYear() + 2;
+        const date = new Date(`${testYear}-01-01T00:00:00+09:00`);
         holidayjp.isHoliday(date);
     }).toThrow();
 });
@@ -134,4 +137,37 @@ test('[isHoliday] timezoneEffect=false on UTC', () => {
     const date = new Date(2021, 2-1, 11, 15, 0, 0); // 2021/2/11 15:00:00 UTC => 2021/2/12 00:00:00 JST
     const holiday = holidayjp.isHoliday(date);
     expect(holiday).toBe(true);
+});
+
+// --------------------------------
+//  unsupportedDateBehavior section ('ignore' only because default is 'error')
+// --------------------------------
+
+test('[isHoliday] unsupportedDateBehavior=ignore older by Date', () => {
+    const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
+    const cond = new Date("1954-01-01T00:00:00+09:00");
+    const holiday = holidayjp.isHoliday(cond);
+    expect(holiday).toEqual(false);
+});
+
+test('[isHoliday] unsupportedDateBehavior=ignore older by HoidayCondition', () => {
+    const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
+    const cond = { year: 1954, month: 1, day: 1 };
+    const holiday = holidayjp.isHoliday(cond);
+    expect(holiday).toEqual(false);
+});
+
+test('[isHoliday]  unsupportedDateBehavior=ignore feature by Date', () => {
+    const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
+    const testYear = new Date().getFullYear() + 2;
+    const cond = new Date(`${testYear}-01-01T00:00:00+09:00`);
+    const holiday = holidayjp.isHoliday(cond);
+    expect(holiday).toEqual(false);
+});
+
+test('[isHoliday]  unsupportedDateBehavior=ignore feature by HolidayCondition', () => {
+    const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
+    const cond = { year: new Date().getFullYear()+2, month: 1, day: 1 }; // 2年後の1/1
+    const holiday = holidayjp.isHoliday(cond);
+    expect(holiday).toEqual(false);
 });
