@@ -3,5 +3,6 @@
 /node_modules
 /src
 /test
-jest.config
+jest.config.js
+tsconfig.build.json
 tsconfig.json
