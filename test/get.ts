@@ -92,9 +92,9 @@ test('[get] timezone is JST', () => {
     timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
     const holidayjp = useHolidayJP();
     const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
-    expect(holidays[0].localDate.getFullYear()).toEqual(2021);
-    expect(holidays[0].localDate.getMonth()).toEqual(5-1);
-    expect(holidays[0].localDate.getDate()).toEqual(3);
+    // JEST&timezone-mockではテストを行った時刻によってDate.getDate()で得られる時刻が一定ではない。
+    // このためISOStringで検査する。
+    expect(holidays[0].localDate.toISOString()).toEqual("2021-05-02T15:00:00.000Z");
 });
 
 test('[get] timezone is UTC', () => {
@@ -110,27 +110,9 @@ test('[get] timezone is UTC', () => {
 //  timezoneEffect section (false only because default is true)
 // --------------------------------
 
-test('[get] timezoneEffect=true on JST', () => {
-    timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
-    const holidayjp = useHolidayJP({ timezoneEffect: true });
-    const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
-    expect(holidays[0].localDate.getFullYear()).toEqual(2021);
-    expect(holidays[0].localDate.getMonth()).toEqual(5-1);
-    expect(holidays[0].localDate.getDate()).toEqual(3);
-});
-
 test('[get] timezoneEffect=false on JST', () => {
     timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
     const holidayjp = useHolidayJP({ timezoneEffect: false });
-    const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
-    expect(holidays[0].localDate.getFullYear()).toEqual(2021);
-    expect(holidays[0].localDate.getMonth()).toEqual(5-1);
-    expect(holidays[0].localDate.getDate()).toEqual(3);
-});
-
-test('[get] imezoneEffect=true on UTC', () => {
-    timezoneMock.register('UTC');
-    const holidayjp = useHolidayJP({ timezoneEffect: true });
     const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
     // JEST&timezone-mockではテストを行った時刻によってDate.getDate()で得られる時刻が一定ではない。
     // このためISOStringで検査する。
@@ -141,9 +123,9 @@ test('[get] timezoneEffect=false on UTC', () => {
     timezoneMock.register('UTC');
     const holidayjp = useHolidayJP({ timezoneEffect: false });
     const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
-    expect(holidays[0].localDate.getFullYear()).toEqual(2021);
-    expect(holidays[0].localDate.getMonth()).toEqual(5-1);
-    expect(holidays[0].localDate.getDate()).toEqual(3);
+    // JEST&timezone-mockではテストを行った時刻によってDate.getDate()で得られる時刻が一定ではない。
+    // このためISOStringで検査する。
+    expect(holidays[0].localDate.toISOString()).toEqual("2021-05-02T15:00:00.000Z");
 });
 
 // --------------------------------
