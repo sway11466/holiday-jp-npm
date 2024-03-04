@@ -19,6 +19,7 @@ const createDefaultStoreSetting = (): HolidayJPSetting => {
  * 引数で指定したyear/month/dayをJST日付とみなして、タイムゾーンを考慮したDateオブジェクトを生成する。時刻は00:00:00となる。
  */
 const initLocalDate = (year: number, month: number, day: number) => {
+    console.log(`year=${year}, month=${month}, day=${day}`);
     const fillYear = year.toString();
     const fillMonth = month.toString().padStart(2, '0');
     const fillDay = day.toString().padStart(2, '0');
