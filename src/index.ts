@@ -19,10 +19,9 @@ const createDefaultStoreSetting = (): HolidayJPSetting => {
  * 引数で指定したyear/month/dayをJST日付とみなして、タイムゾーンを考慮したDateオブジェクトを生成する。時刻は00:00:00となる。
  */
 const initLocalDate = (year: number, month: number, day: number) => {
-    console.log(`year=${year}, month=${month}, day=${day}`);
-    const fillYear = year.toString();
-    const fillMonth = month.toString().padStart(2, '0');
-    const fillDay = day.toString().padStart(2, '0');
+    const fillYear = String(year);
+    const fillMonth = String(month).padStart(2, '0');
+    const fillDay = String(day).padStart(2, '0');
     const isoString = `${fillYear}-${fillMonth}-${fillDay}T00:00:00+09:00`;
     return new Date(isoString);
 }
@@ -124,9 +123,9 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         if (!isValidDate(cond)) {
             throw new Error('[@sway11466/holyday-jp error] invalid date.');
         }
-        const year = (cond.year as number).toString();
-        const month = (cond.month as number).toString().padStart(2, '0');
-        const day = (cond.day as number).toString().padStart(2, '0');
+        const year = String(cond.year as number);
+        const month = String(cond.month as number).padStart(2, '0');
+        const day = String(cond.day as number).padStart(2, '0');
         const isoString = `${year}-${month}-${day}T00:00:00+09:00`;
         return new Date(isoString);
     }
@@ -141,9 +140,9 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         if (cond.year === undefined || cond.month === undefined || cond.day === undefined) {
             return false;
         }
-        const year = cond.year.toString();
-        const month = cond.month?.toString().padStart(2, '0');
-        const day = cond.day?.toString().padStart(2, '0');
+        const year = String(cond.year);
+        const month = String(cond.month as number).padStart(2, '0');
+        const day = String(cond.day as number).padStart(2, '0');
         return !isNaN(new Date(`${year}-${month}-${day}`).getDate());
     };
 
