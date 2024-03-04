@@ -1,6 +1,14 @@
 # APIドキュメント
 HolidayJPのCICD関連の説明です。
 
+## test
+
+   1. ローカルでのテスト
+      - npm test
+
+   2. 自動テスト
+      - GitHub Acitonsで構築したテストをプッシュトリガーで実行する
+
 ## publish
 
    1. publishの準備
