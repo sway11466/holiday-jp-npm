@@ -1,4 +1,4 @@
-name: Publish Package to npmjs
+name: publish
 
 on: [workflow_dispatch]
 
@@ -21,7 +21,7 @@ jobs:
       - name: Test
         run: npm test
 
-      - name Publish
+      - name: Publish
         run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
