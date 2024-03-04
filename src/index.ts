@@ -35,7 +35,7 @@ const initLocalDate = (year: number, month: number, day: number) => {
 const store: HolidayJPStore = (() => {
     const store: HolidayJPStore = { holiday: {}, setting: createDefaultStoreSetting() };
     const csvPath = path.join(path.dirname(__filename), 'syukujitsu.csv');
-    fs.readFileSync(csvPath).toString().split('\r\n').forEach((value) => {
+    fs.readFileSync(csvPath).toString().split('\n').forEach((value) => {
         if (!value.match(/\d+\/\d+\/\d+/)) { return; } // ヘッダーと空行を除く
         const [date, name] = value.split(',');
         const [year, month, day] = date.split('/').map(value => Number(value));
