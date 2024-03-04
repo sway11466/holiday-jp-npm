@@ -6,12 +6,19 @@ module.exports = {
     testEnvironment: 'node',
 
     // Jestがテストファイルとして認識するファイル拡張子
-    testRegex: '\\.(js|jsx|ts|tsx)$',
+    // testRegex: '\\.(js|jsx|ts|tsx)$',
 
     // テスト内でモジュールの依存関係を解決するためのモジュール名マッパー
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
     },
+
+    // テストカバレッジを取得する
+    collectCoverage: true,
+    collectCoverageFrom: [
+      "**/*.(js|ts)",
+      "!**/node_modules/**",
+    ],
 
     // テスト実行前にコードをトランスパイルするためのトランスフォーム設定
     preset: "ts-jest",
