@@ -109,7 +109,6 @@ test('[isWeekend] timezone is JST', () => {
     const date = new Date(2021, 5 - 1, 9, 15, 0, 0); // 2021/5/9 15:00:00 JST
     const weekend = holidayjp.isWeekend(date);
     expect(weekend).toBe(true);
-    timezoneMock.unregister();
 });
 
 test('[isWeekend] timezone is UTC', () => {
@@ -118,7 +117,6 @@ test('[isWeekend] timezone is UTC', () => {
     const date = new Date(2021, 5 - 1, 9, 15, 0, 0); // 2021/5/9 15:00:00 UTC => 2021/5/10 00:00:00 JST
     const weekend = holidayjp.isWeekend(date);
     expect(weekend).toBe(false);
-    timezoneMock.unregister();
 });
 
 // --------------------------------
@@ -131,7 +129,6 @@ test('[isWeekend] timezoneEffect=false on JST', () => {
     const date = new Date(2021, 5 - 1, 9, 15, 0, 0); // 2021/5/9 15:00:00 JST
     const holiday = holidayjp.isWeekend(date);
     expect(holiday).toBe(true);
-    timezoneMock.unregister();
 });
 
 test('[isWeekend] timezoneEffect=false on UTC', () => {
@@ -140,7 +137,6 @@ test('[isWeekend] timezoneEffect=false on UTC', () => {
     const date = new Date(2021, 5 - 1, 9, 15, 0, 0); // 2021/5/9 15:00:00 UTC => 2021/5/10 00:00:00 JST
     const weekend = holidayjp.isWeekend(date);
     expect(weekend).toBe(true);
-    timezoneMock.unregister();
 });
 
 // --------------------------------
@@ -183,15 +179,15 @@ test('[isWeekend]  unsupportedDateBehavior=ignore feature by HolidayCondition', 
 
 test('[isWeekend] weekend by Date', () => {
     const holidayjp = useHolidayJP({ weekend: [4] }); // 週末は木曜日のみ
-    const date = new Date('2021-05-08T00:00:00+09:00'); // 土曜
+    const date = new Date('2021-05-08T00:00:00+00:00'); // 土曜
     const weekend = holidayjp.isWeekend(date);
     expect(weekend).toBe(false);
 });
 
 test('[isWeekend] weekend by Date', () => {
     const holidayjp = useHolidayJP({ weekend: [4] }); // 週末は木曜日のみ
-    const date = new Date('2021-05-06T00:00:00+09:00'); // 木曜
-    console.log(holidayjp.createCond(date));
+    const date = new Date('2021-05-06T00:00:00+00:00'); // 木曜
+    console.log(date.toISOString());
     const weekend = holidayjp.isWeekend(date);
     expect(weekend).toBe(true);
 });
