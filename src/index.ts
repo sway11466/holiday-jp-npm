@@ -170,9 +170,11 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
      * 条件に合致する祝日のデータを返す。
      * 条件に合致する祝日がない場合には空の配列を返す。
      * サポート外の年の条件を指定した場合にはエラーをthrowする。
-     * @todo date型も受け取れるようにする
      */
-    const get = (cond?: HolidayJPCondition): HolidayJP[] => {
+    const get = (cond?: Date | HolidayJPCondition): HolidayJP[] => {
+        return getImpl(cond instanceof Date ? createCond(cond) : cond);
+    };
+    const getImpl = (cond?: HolidayJPCondition): HolidayJP[] => {
         if (cond === null || cond === undefined) {
             return all();
         }

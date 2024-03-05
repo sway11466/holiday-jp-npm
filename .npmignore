@@ -1,9 +1,11 @@
 /.github
+/.vscode
 /coverage
 /doc/memo
 /node_modules
 /src
 /test
+.eslintrc.yml
 .prettierrc.yaml
 jest.config.js
 tsconfig.build.json
