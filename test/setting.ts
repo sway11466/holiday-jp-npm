@@ -1,7 +1,7 @@
 import { useHolidayJP } from '../src/index';
 
 test('[setting] basic call', () => {
-    const holidayjp = useHolidayJP();
+    useHolidayJP();
     expect(true);
 });
 

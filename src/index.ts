@@ -12,6 +12,7 @@ const createDefaultStoreSetting = (): HolidayJPSetting => {
     return {
         timezoneEffect: true,
         unsupportedDateBehavior: 'error',
+        weekend: [0, 6],
     };
 };
 
@@ -210,7 +211,7 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
     };
 
     /**
-     * 指定した日付が土日の場合にtrueを返す。
+     * 指定した日付が週末の場合にtrueを返す。
      */
     const isWeekend = (date: Date | HolidayJPCondition) => {
         return isWeekendImpl(date instanceof Date ? createCond(date) : date);
@@ -223,7 +224,7 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
             throw new Error(`@sway11466/holyday-jp error] not supported date. date=${date}`);
         }
         const jstDate = new Date(date.year as number, (date.month as number) - 1, date.day);
-        return jstDate.getDay() === 0 || jstDate.getDay() === 6;
+        return store.setting.weekend.some((day) => day === jstDate.getDay());
     };
 
     /**
