@@ -12,4 +12,4 @@ export type HolidayJPCondition = {
     month?: number;
     day?: number;
     name?: string;
-}
+};

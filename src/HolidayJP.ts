@@ -16,4 +16,4 @@ export type HolidayJP = {
     day: number;
     name: string;
     localDate: Date;
-}
+};
