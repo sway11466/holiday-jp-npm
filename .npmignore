@@ -1,8 +1,10 @@
+/.github
 /coverage
 /doc/memo
 /node_modules
 /src
 /test
+.prettierrc.yaml
 jest.config.js
 tsconfig.build.json
 tsconfig.json
