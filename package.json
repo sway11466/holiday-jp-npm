@@ -1,8 +1,8 @@
 {
     "name": "@sway11466/holiday-jp-npm",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Library to judge Japanese national holidays in nodejs.",
-    "main": "/dist/index.js",
+    "main": "dist/index.js",
     "scripts": {
         "clean": "rimraf dist",
         "compile": "tsc --project tsconfig.build.json",
