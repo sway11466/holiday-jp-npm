@@ -17,13 +17,13 @@ const createDefaultStoreSetting = (): HolidayJPSetting => {
 };
 
 /**
- * 引数で指定したyear/month/dayをJST日付とみなして、タイムゾーンを考慮したDateオブジェクトを生成する。時刻は00:00:00となる。
+ * 引数で指定したyear/month/dateをJST日付とみなして、タイムゾーンを考慮したDateオブジェクトを生成する。時刻は00:00:00となる。
  */
-const initLocalDate = (year: number, month: number, day: number) => {
+const initLocalDate = (year: number, month: number, date: number) => {
     const fillYear = String(year);
     const fillMonth = String(month).padStart(2, '0');
-    const fillDay = String(day).padStart(2, '0');
-    const isoString = `${fillYear}-${fillMonth}-${fillDay}T00:00:00+09:00`;
+    const fillDate = String(date).padStart(2, '0');
+    const isoString = `${fillYear}-${fillMonth}-${fillDate}T00:00:00+09:00`;
     return new Date(isoString);
 };
 
@@ -44,17 +44,17 @@ const store: HolidayJPStore = (() => {
             if (!value.match(/\d+\/\d+\/\d+/)) {
                 return;
             }
-            const [date, name] = value.split(',');
-            const [year, month, day] = date.split('/').map((value) => Number(value));
+            const [fulldate, name] = value.split(',');
+            const [year, month, date] = fulldate.split('/').map((value) => Number(value));
             if (store.holiday[year] === undefined) {
                 store.holiday[year] = [];
             }
             store.holiday[year].push({
                 year,
                 month,
-                day,
+                date,
                 name,
-                localDate: initLocalDate(year, month, day),
+                localDate: initLocalDate(year, month, date),
             });
         });
     return store;
@@ -115,7 +115,7 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         return {
             year: jstDate.getFullYear(),
             month: jstDate.getMonth() + 1,
-            day: jstDate.getDate(),
+            date: jstDate.getDate(),
         };
     };
     // JSTでの日付を示すDateオブジェクトを作る。ややこしいので内部関数。
@@ -133,8 +133,8 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         }
         const year = String(cond.year as number);
         const month = String(cond.month as number).padStart(2, '0');
-        const day = String(cond.day as number).padStart(2, '0');
-        const isoString = `${year}-${month}-${day}T00:00:00+09:00`;
+        const date = String(cond.date as number).padStart(2, '0');
+        const isoString = `${year}-${month}-${date}T00:00:00+09:00`;
         return new Date(isoString);
     };
 
@@ -145,13 +145,13 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         return isValidDateImpl(cond instanceof Date ? createCond(cond) : cond);
     };
     const isValidDateImpl = (cond: HolidayJPCondition) => {
-        if (cond.year === undefined || cond.month === undefined || cond.day === undefined) {
+        if (cond.year === undefined || cond.month === undefined || cond.date === undefined) {
             return false;
         }
         const year = String(cond.year);
         const month = String(cond.month as number).padStart(2, '0');
-        const day = String(cond.day as number).padStart(2, '0');
-        return !isNaN(new Date(`${year}-${month}-${day}`).getDate());
+        const date = String(cond.date as number).padStart(2, '0');
+        return !isNaN(new Date(`${year}-${month}-${date}`).getDate());
     };
 
     /**
@@ -187,7 +187,7 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         }
         const holiday = cond.year ? store.holiday[cond.year] : all();
         return holiday.filter((value) => {
-            return (cond.month === undefined || value.month === cond.month) && (cond.day === undefined || value.day === cond.day) && (cond.name === undefined || value.name === cond.name);
+            return (cond.month === undefined || value.month === cond.month) && (cond.date === undefined || value.date === cond.date) && (cond.name === undefined || value.name === cond.name);
         });
     };
 
@@ -223,7 +223,7 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         if (!isSupportDateImpl(date) && store.setting.unsupportedDateBehavior !== 'ignore') {
             throw new Error(`@sway11466/holyday-jp error] not supported date. date=${date}`);
         }
-        const jstDate = new Date(date.year as number, (date.month as number) - 1, date.day);
+        const jstDate = new Date(date.year as number, (date.month as number) - 1, date.date);
         return store.setting.weekend.some((day) => day === jstDate.getDay());
     };
 

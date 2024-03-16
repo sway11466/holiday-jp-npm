@@ -43,7 +43,7 @@ test('[get] month param by HolidayJP', () => {
 
 test('[get] day param by HolidayJP', () => {
     const holidayjp = useHolidayJP();
-    const holidays = holidayjp.get({ year: 2021, month: 5, day: 3 });
+    const holidays = holidayjp.get({ year: 2021, month: 5, date: 3 });
     expect(holidays.length).toEqual(1);
 });
 
@@ -59,12 +59,12 @@ test('[get] year and name param by HolidayJP', () => {
     expect(holiday.length).toEqual(1);
     expect(holiday[0].year).toEqual(2021);
     expect(holiday[0].month).toEqual(7);
-    expect(holiday[0].day).toEqual(23);
+    expect(holiday[0].date).toEqual(23);
 });
 
 test('[get] no result param by HolidayJP', () => {
     const holidayjp = useHolidayJP();
-    const holidays = holidayjp.get({ year: 2021, month: 5, day: 10 });
+    const holidays = holidayjp.get({ year: 2021, month: 5, date: 10 });
     expect(holidays.length).toEqual(0);
 });
 
@@ -81,7 +81,7 @@ test('[get] invalid date by Date', () => {
 
 test('[get] invalid date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const cond = { year: 2001, month: 1, day: 32 };
+    const cond = { year: 2001, month: 1, date: 32 };
     const holiday = holidayjp.get(cond);
     expect(holiday.length).toEqual(0);
 });

@@ -12,14 +12,14 @@ test('[isValidDate] basic call', () => {
 
 test('[isValidDate] valid by Date', () => {
     const holidayjp = useHolidayJP();
-    const date = new Date("2021-05-03T00:00:00+09:00"); // 憲法記念日
+    const date = new Date('2021-05-03T00:00:00+09:00'); // 憲法記念日
     const valid = holidayjp.isValidDate(date);
     expect(valid).toBe(true);
 });
 
 test('[isValidDate] valid by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isValidDate({ year: 2021, month: 5, day: 3 });
+    const holiday = holidayjp.isValidDate({ year: 2021, month: 5, date: 3 });
     expect(holiday).toBe(true);
 });
 
@@ -29,13 +29,13 @@ test('[isValidDate] valid by HolidayCondition', () => {
 
 test('[isValidDate] invalid by Date', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isValidDate(new Date("2021-01-32"));
+    const holiday = holidayjp.isValidDate(new Date('2021-01-32'));
     expect(holiday).toBe(false);
 });
 
 test('[isValidDate] invalid by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isValidDate({ year: 2021, month: 1, day: 32 });
+    const holiday = holidayjp.isValidDate({ year: 2021, month: 1, date: 32 });
     expect(holiday).toBe(false);
 });
 

@@ -20,7 +20,7 @@ test('[isHoliday] holiday call by Date', () => {
 
 test('[isHoliday] holiday call by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, day: 3 }); // 憲法記念日
+    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, date: 3 }); // 憲法記念日
     expect(holiday).toBe(true);
 });
 
@@ -33,7 +33,7 @@ test('[isHoliday] not holiday call by Date', () => {
 
 test('[isHoliday] not holiday call by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, day: 20 }); // 平日
+    const holiday = holidayjp.isHoliday({ year: 2021, month: 5, date: 20 }); // 平日
     expect(holiday).toBe(false);
 });
 
@@ -51,7 +51,7 @@ test('[isHoliday] invalid date by Date', () => {
 test('[isHoliday] invalid date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        holidayjp.isHoliday({ year: 2021, month: 5, day: 32 });
+        holidayjp.isHoliday({ year: 2021, month: 5, date: 32 });
     }).toThrow();
 });
 
@@ -152,7 +152,7 @@ test('[isHoliday] unsupportedDateBehavior=ignore older by Date', () => {
 
 test('[isHoliday] unsupportedDateBehavior=ignore older by HoidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
-    const cond = { year: 1954, month: 1, day: 1 };
+    const cond = { year: 1954, month: 1, date: 1 };
     const holiday = holidayjp.isHoliday(cond);
     expect(holiday).toEqual(false);
 });
@@ -167,7 +167,7 @@ test('[isHoliday]  unsupportedDateBehavior=ignore feature by Date', () => {
 
 test('[isHoliday]  unsupportedDateBehavior=ignore feature by HolidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
-    const cond = { year: new Date().getFullYear() + 2, month: 1, day: 1 }; // 2年後の1/1
+    const cond = { year: new Date().getFullYear() + 2, month: 1, date: 1 }; // 2年後の1/1
     const holiday = holidayjp.isHoliday(cond);
     expect(holiday).toEqual(false);
 });

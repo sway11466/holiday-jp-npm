@@ -5,7 +5,7 @@
 | 日付の種類 | 判定方法 |
 |------------|----------------------------------------------------------------------------------------------------------------|
 | 平日 | 週末でも祝日でもない日 |
-| 週末 | 土曜日および日曜日（featuer! 設定で変更可能） |
+| 週末 | 土曜日および日曜日（対象となる曜日は設定で変更可能） |
 | 祝日 | 内閣府ホームページの[「国民の祝日」について](https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html)に記載の祝日 |
 
 例えば2024年5月は以下のように判定します。
@@ -23,11 +23,20 @@ npm install @sway11466/holiday-jp-npm
 
 ## 使い方
 
--   指定日が祝日であるか判定する
+-   初期化
     ```
     import { useHolidayJP } from '@sway11466/holiday-jp-npm'
     const holidayjp = useHolidayJP();
-    holidayjp.isHoliday(new Date(2021, 5-1, 3)); // 2021/5/3 => true
+    ```
+-   指定日が祝日であるか判定する
+    ```
+    const ret = holidayjp.isHoliday(new Date(2021, 5-1, 3)); // 2021/5/3 憲法記念日
+    console.log(ret); // true
+    ```
+-   指定日が平日であるか判定する
+    ```
+    const ret = holidayjp.isWeekday(new Date(2021, 5-1, 7)); // 2021/5/7 平日
+    console.log(ret); // true
     ```
 -   指定した条件に当てはまる祝日を取得する（例１）
     ```

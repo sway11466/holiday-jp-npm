@@ -13,7 +13,7 @@
 export type HolidayJP = {
     year: number;
     month: number;
-    day: number;
+    date: number;
     name: string;
     localDate: Date;
 };

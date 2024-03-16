@@ -20,7 +20,7 @@ test('[isWeekend] weekend by Date', () => {
 
 test('[isWeekend] weekend by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const weekend = holidayjp.isWeekend({ year: 2021, month: 5, day: 8 }); // 土曜
+    const weekend = holidayjp.isWeekend({ year: 2021, month: 5, date: 8 }); // 土曜
     expect(weekend).toBe(true);
 });
 
@@ -33,7 +33,7 @@ test('[isWeekend] not weekend call by Date', () => {
 
 test('[isWeekend] not weekend call by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
-    const weekend = holidayjp.isWeekend({ year: 2021, month: 5, day: 10 }); // 平日
+    const weekend = holidayjp.isWeekend({ year: 2021, month: 5, date: 10 }); // 平日
     expect(weekend).toBe(false);
 });
 
@@ -51,7 +51,7 @@ test('[isWeekend] invalid date by Date', () => {
 test('[isWeekend] invalid date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        holidayjp.isWeekend({ year: 2021, month: 5, day: 32 });
+        holidayjp.isWeekend({ year: 2021, month: 5, date: 32 });
     }).toThrow();
 });
 
@@ -152,7 +152,7 @@ test('[isWeekend] unsupportedDateBehavior=ignore older by Date', () => {
 
 test('[isWeekend] unsupportedDateBehavior=ignore older by HoidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
-    const cond = { year: 1954, month: 1, day: 1 }; // 平日
+    const cond = { year: 1954, month: 1, date: 1 }; // 平日
     const weekend = holidayjp.isWeekend(cond);
     expect(weekend).toEqual(false);
 });
@@ -167,7 +167,7 @@ test('[isWeekend]  unsupportedDateBehavior=ignore feature by Date', () => {
 
 test('[isWeekend]  unsupportedDateBehavior=ignore feature by HolidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
-    const cond = { year: new Date().getFullYear() + 2, month: 1, day: 1 };
+    const cond = { year: new Date().getFullYear() + 2, month: 1, date: 1 };
     const jstdate = new Date(`${cond.year}-01-01T00:00:00+09:00`);
     const weekend = holidayjp.isWeekend(cond);
     expect(weekend).toEqual(jstdate.getDay() === 0 || jstdate.getDay() === 6);

@@ -11,5 +11,5 @@ test('[min] valid data', () => {
     const holiday = holidayjp.min();
     expect(holiday.year).toEqual(1955);
     expect(holiday.month).toEqual(1);
-    expect(holiday.day).toEqual(1);
+    expect(holiday.date).toEqual(1);
 });
