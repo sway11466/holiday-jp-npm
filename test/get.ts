@@ -1,5 +1,5 @@
 import timezoneMock from 'timezone-mock';
-import { useHolidayJP } from '../src/index';
+import { HolidayJP, useHolidayJP } from '../src/index';
 
 test('[get] basic call', () => {
     const holidayjp = useHolidayJP();
@@ -97,7 +97,7 @@ test('[get] older date by Date', () => {
 test('[get] older date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const cond = { year: 1954, month: 1, day: 1 };
+        const cond = { year: 1954, month: 1, date: 1 };
         holidayjp.get(cond);
     }).toThrow();
 });
@@ -114,7 +114,7 @@ test('[get] feature date by Date', () => {
 test('[get] feature date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const cond = { year: new Date().getFullYear() + 2, month: 1, day: 1 }; // 2年後の1/1
+        const cond = { year: new Date().getFullYear() + 2, month: 1, date: 1 }; // 2年後の1/1
         holidayjp.get(cond);
     }).toThrow();
 });
@@ -180,7 +180,7 @@ test('[get] unsupportedDateBehavior=ignore older by Date', () => {
 
 test('[get] unsupportedDateBehavior=ignore older by HolidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
-    const cond = { year: 1954, month: 1, day: 1 };
+    const cond = { year: 1954, month: 1, date: 1 };
     const holiday = holidayjp.get(cond);
     expect(holiday.length).toEqual(0);
 });
@@ -195,7 +195,19 @@ test('[get]  unsupportedDateBehavior=ignore feature Date', () => {
 
 test('[get]  unsupportedDateBehavior=ignore feature by HolidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
-    const cond = { year: new Date().getFullYear() + 2, month: 1, day: 1 };
+    const cond = { year: new Date().getFullYear() + 2, month: 1, date: 1 };
     const holiday = holidayjp.get(cond);
     expect(holiday.length).toEqual(0);
+});
+
+// --------------------------------
+//  extends section
+// --------------------------------
+
+test('[get]  additonal holiday setting', () => {
+    const additional: HolidayJP[] = [{ name: 'test', year: 2023, month: 3, date: 10, localDate: new Date('2023-03-10T00:00:00+09:00') }];
+    const holidayjp = useHolidayJP({ extends: additional });
+    const cond = { year: 2023, month: 3, date: 10 };
+    const holiday = holidayjp.get(cond);
+    expect(holiday.length).toEqual(1);
 });

@@ -77,7 +77,7 @@ test('[isWeekend] older date by Date', () => {
 test('[isWeekend] older date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = { year: 1954, month: 1, day: 1 };
+        const date = { year: 1954, month: 1, date: 1 };
         holidayjp.isWeekend(date);
     }).toThrow();
 });
@@ -94,7 +94,7 @@ test('[isWeekend] feature date by Date', () => {
 test('[isWeekend] feature date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = { year: new Date().getFullYear() + 2, month: 1, day: 1 };
+        const date = { year: new Date().getFullYear() + 2, month: 1, date: 1 };
         holidayjp.isWeekend(date);
     }).toThrow();
 });

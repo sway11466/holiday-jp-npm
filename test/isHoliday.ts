@@ -1,5 +1,5 @@
 import timezoneMock from 'timezone-mock';
-import { useHolidayJP } from '../src/index';
+import { HolidayJP, useHolidayJP } from '../src/index';
 
 test('[isHoliday] basic call', () => {
     const holidayjp = useHolidayJP();
@@ -77,7 +77,7 @@ test('[isHoliday] older date by Date', () => {
 test('[isHoliday] older date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = { year: 1954, month: 1, day: 1 };
+        const date = { year: 1954, month: 1, date: 1 };
         holidayjp.isHoliday(date);
     }).toThrow();
 });
@@ -94,7 +94,7 @@ test('[isHoliday] feature date by Date', () => {
 test('[isHoliday] feature date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = { year: new Date().getFullYear() + 2, month: 1, day: 1 }; // 2年後の1/1
+        const date = { year: new Date().getFullYear() + 2, month: 1, date: 1 }; // 2年後の1/1
         holidayjp.isHoliday(date);
     }).toThrow();
 });
@@ -170,4 +170,16 @@ test('[isHoliday]  unsupportedDateBehavior=ignore feature by HolidayCondition', 
     const cond = { year: new Date().getFullYear() + 2, month: 1, date: 1 }; // 2年後の1/1
     const holiday = holidayjp.isHoliday(cond);
     expect(holiday).toEqual(false);
+});
+
+// --------------------------------
+//  extends section
+// --------------------------------
+
+test('[isHoliday]  additonal holiday setting', () => {
+    const additional: HolidayJP[] = [{ name: 'test', year: 2023, month: 3, date: 10, localDate: new Date('2023-03-10T00:00:00+09:00') }];
+    const holidayjp = useHolidayJP({ extends: additional });
+    const cond = { year: 2023, month: 3, date: 10 };
+    const holiday = holidayjp.isHoliday(cond);
+    expect(holiday).toEqual(true);
 });

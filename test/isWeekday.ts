@@ -1,5 +1,5 @@
 import timezoneMock from 'timezone-mock';
-import { useHolidayJP } from '../src/index';
+import { HolidayJP, useHolidayJP } from '../src/index';
 
 test('[isWeekday] basic call', () => {
     const holidayjp = useHolidayJP();
@@ -77,7 +77,7 @@ test('[isWeekday] older date by Date', () => {
 test('[isWeekday] older date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = { year: 1954, month: 1, day: 1 };
+        const date = { year: 1954, month: 1, date: 1 };
         holidayjp.isWeekday(date);
     }).toThrow();
 });
@@ -94,7 +94,7 @@ test('[isWeekday] feature date by Date', () => {
 test('[isWeekday] feature date by HolidayCondition', () => {
     const holidayjp = useHolidayJP();
     expect(() => {
-        const date = { year: new Date().getFullYear() + 2, month: 1, day: 1 };
+        const date = { year: new Date().getFullYear() + 2, month: 1, date: 1 };
         holidayjp.isWeekday(date);
     }).toThrow();
 });
@@ -173,4 +173,16 @@ test('[isWeekday]  unsupportedDateBehavior=ignore feature by HolidayCondition', 
     const day = jstdate.getDay() === 0 || jstdate.getDay() === 6;
     const holiday = holidayjp.isWeekday(cond);
     expect(holiday).toEqual(!day);
+});
+
+// --------------------------------
+//  extends section
+// --------------------------------
+
+test('[isWeekday]  additonal holiday setting', () => {
+    const additional: HolidayJP[] = [{ name: 'test', year: 2023, month: 3, date: 10, localDate: new Date('2023-03-10T00:00:00+09:00') }]; // 金曜日
+    const holidayjp = useHolidayJP({ extends: additional });
+    const cond = { year: 2023, month: 3, date: 10 };
+    const holiday = holidayjp.isWeekday(cond);
+    expect(holiday).toEqual(false);
 });

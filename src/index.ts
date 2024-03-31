@@ -13,6 +13,7 @@ const createDefaultStoreSetting = (): HolidayJPSetting => {
         timezoneEffect: true,
         unsupportedDateBehavior: 'error',
         weekend: [0, 6],
+        extends: [],
     };
 };
 
@@ -73,7 +74,10 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         if (setting === undefined) {
             return;
         }
-        Object.assign(store.setting, setting);
+        Object.assign(store.setting, structuredClone(setting));
+        if (setting.extends) {
+            setting.extends.forEach((holiday) => store.holiday[holiday.year].push(holiday));
+        }
     })(initSetting);
 
     /**
