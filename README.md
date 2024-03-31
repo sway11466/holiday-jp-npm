@@ -61,7 +61,7 @@ npm install @sway11466/holiday-jp-npm
     const holidayjp = useHolidayJP({ extends: additional });
     const cond = { year: 2023, month: 3, date: 10 };
     const holiday = holidayjp.isHoliday(cond);
-    console.log(ret); // true
+    console.log(holiday); // true
     ```
 
 ## 説明
