@@ -24,4 +24,7 @@ export type HolidayJPSettingCond = {
     unsupportedDateBehavior?: UnsupportedDateBehavior;
     weekend?: WeekendSetting[];
     extends?: HolidayJP[];
+    // 設定のスコープ。'global'はグローバルストアに反映（デフォルト）、'local'は独立したインスタンスを生成する。
+    scope?: SettingScope;
 };
+export type SettingScope = 'global' | 'local';

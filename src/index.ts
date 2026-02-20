@@ -30,12 +30,13 @@ const initLocalDate = (year: number, month: number, date: number) => {
 
 /**
  * 内閣府公開の祝日のデータを読み込む。
+ * ローカルインスタンス生成時のクローン元となる読み取り専用のベースデータ。
  *
  * @see https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html
  * @see https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
  */
-const store: HolidayJPStore = (() => {
-    const store: HolidayJPStore = { holiday: {}, setting: createDefaultStoreSetting() };
+const baseHoliday: HolidayJPStore['holiday'] = (() => {
+    const holiday: HolidayJPStore['holiday'] = {};
     const csvPath = path.join(path.dirname(__filename), 'syukujitsu.csv');
     fs.readFileSync(csvPath)
         .toString()
@@ -47,10 +48,10 @@ const store: HolidayJPStore = (() => {
             }
             const [fulldate, name] = value.split(',');
             const [year, month, date] = fulldate.split('/').map((value) => Number(value));
-            if (store.holiday[year] === undefined) {
-                store.holiday[year] = [];
+            if (holiday[year] === undefined) {
+                holiday[year] = [];
             }
-            store.holiday[year].push({
+            holiday[year].push({
                 year,
                 month,
                 date,
@@ -58,15 +59,36 @@ const store: HolidayJPStore = (() => {
                 localDate: initLocalDate(year, month, date),
             });
         });
-    return store;
+    return holiday;
 })();
 
 /**
+ * グローバルスコープで使用するストア。
+ * scope:'global'（デフォルト）の場合に使用され、設定は全インスタンスで共有される。
+ */
+const globalStore: HolidayJPStore = {
+    holiday: structuredClone(baseHoliday),
+    setting: createDefaultStoreSetting(),
+};
+
+/**
  * 祝日を扱う機能を返す。
+ * scope:'global'（デフォルト）はグローバルストアに設定を反映する。
+ * scope:'local' は独立したストアを生成し、他のインスタンスに影響しない。
  *
  * @returns
  */
 const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
+    /**
+     * scope に応じてストアを選択する。
+     * 'local' の場合は baseHoliday をクローンして独立したストアを生成する。
+     * 'global'（デフォルト）の場合はグローバルストアをそのまま使用する。
+     */
+    const store: HolidayJPStore =
+        initSetting?.scope === 'local'
+            ? { holiday: structuredClone(baseHoliday), setting: createDefaultStoreSetting() }
+            : globalStore;
+
     /**
      * 設定を反映する。
      */
@@ -74,9 +96,15 @@ const useHolidayJP = (initSetting?: HolidayJPSettingCond) => {
         if (setting === undefined) {
             return;
         }
-        Object.assign(store.setting, structuredClone(setting));
+        const { scope: _, ...settingWithoutScope } = setting;
+        Object.assign(store.setting, structuredClone(settingWithoutScope));
         if (setting.extends) {
-            setting.extends.forEach((holiday) => store.holiday[holiday.year].push(holiday));
+            setting.extends.forEach((holiday) => {
+                if (store.holiday[holiday.year] === undefined) {
+                    store.holiday[holiday.year] = [];
+                }
+                store.holiday[holiday.year].push(holiday);
+            });
         }
     })(initSetting);
 
