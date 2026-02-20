@@ -1,6 +1,6 @@
 {
     "name": "@sway11466/holiday-jp-npm",
-    "version": "0.3.3",
+    "version": "0.4.3",
     "description": "Library to judge Japanese national holidays in nodejs.",
     "main": "dist/index.js",
     "scripts": {
