@@ -7,7 +7,8 @@ const holidayjp = useHolidayJP({
     timezoneEffect: true,
     unsupportedDateBehavior: 'error',
     weekend: [0,6],
-    extends: [];
+    extends: [],
+    scope: 'global',
 });
 ```
 
@@ -61,4 +62,26 @@ const holidayjp = useHolidayJP({
     ```
     const additional = [{ name: 'test', year: 2023, month: 3, date: 10, localDate: new Date('2023-03-10T00:00:00+09:00') }];
     const holidayjp = useHolidayJP({ extends: additional });
+    ```
+
+## scope
+
+-   is何？
+    -   設定の反映先（スコープ）を指定する
+-   デフォルト値
+    -   global
+-   設定可能な値
+    -   global
+    -   local
+-   説明
+    -   globalを指定すると、設定はグローバルストアに反映され、同一プロセス内の全インスタンスで共有される
+    -   localを指定すると、設定は独立したストアに反映され、他のインスタンスに影響しない
+    -   既存の使い方（scopeを省略した場合）はglobalと同じ動作となり、後方互換性が維持される
+-   使用例
+    ```
+    // グローバル（デフォルト）: 設定が全インスタンスに影響する
+    const hp1 = useHolidayJP({ weekend: [0, 1, 6] });
+
+    // ローカル: 設定がこのインスタンスだけに影響する
+    const hp2 = useHolidayJP({ weekend: [0, 1, 6], scope: 'local' });
     ```
