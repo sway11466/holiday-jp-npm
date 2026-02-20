@@ -153,26 +153,24 @@ test('[isWeekday] unsupportedDateBehavior=ignore older by Date', () => {
 test('[isWeekday] unsupportedDateBehavior=ignore older by HoidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
     const cond = { year: 1954, month: 1, date: 1 }; // 平日
-    const holiday = holidayjp.isWeekday(cond);
-    expect(holiday).toEqual(true);
+    const weekday = holidayjp.isWeekday(cond);
+    expect(weekday).toEqual(true);
 });
 
 test('[isWeekday]  unsupportedDateBehavior=ignore feature by Date', () => {
+    timezoneMock.register('Etc/GMT-9'); // 'JST'や'Asia/Tokyo'に対応してないためGMT-9を指定
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
     const testYear = new Date().getFullYear() + 2;
-    const cond = new Date(`${testYear}-01-01T00:00:00+09:00`);
-    const day = cond.getDay() === 0 || cond.getDay() === 6;
-    const holiday = holidayjp.isWeekday(cond);
-    expect(holiday).toEqual(!day);
+    const cond = new Date(`${testYear}-01-10T00:00:00+09:00`); // 2028/1/10は平日（テストする年ごとに要確認）
+    const weekday = holidayjp.isWeekday(cond);
+    expect(weekday).toEqual(true);
 });
 
 test('[isWeekday]  unsupportedDateBehavior=ignore feature by HolidayCondition', () => {
     const holidayjp = useHolidayJP({ unsupportedDateBehavior: 'ignore' });
-    const cond = { year: new Date().getFullYear() + 2, month: 1, date: 1 };
-    const jstdate = new Date(`${cond.year}-01-01T00:00:00+09:00`);
-    const day = jstdate.getDay() === 0 || jstdate.getDay() === 6;
-    const holiday = holidayjp.isWeekday(cond);
-    expect(holiday).toEqual(!day);
+    const cond = { year: new Date().getFullYear() + 2, month: 1, date: 10 }; // 2028/1/10は平日（テストする年ごとに要確認）
+    const weekday = holidayjp.isWeekday(cond);
+    expect(weekday).toEqual(true);
 });
 
 // --------------------------------

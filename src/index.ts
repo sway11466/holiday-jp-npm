@@ -29,7 +29,7 @@ const initLocalDate = (year: number, month: number, date: number) => {
 };
 
 /**
- * 内閣府公開の休日のデータを読み込む。
+ * 内閣府公開の祝日のデータを読み込む。
  *
  * @see https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html
  * @see https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
